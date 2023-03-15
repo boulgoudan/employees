@@ -1,0 +1,62 @@
+version: '3.3'
+services:
+  php:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: php
+    container_name: ${APP_NAME}-php
+    working_dir: /var/www/html
+    ports:
+      - '9000:9000'
+    volumes:
+      - './www:/var/www/html'
+    networks:
+      - 'employees'
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  nginx:
+    image: nginx:latest
+    container_name: ${APP_NAME}-nginx
+    ports:
+      - '81:80'
+    volumes:
+      - './www:/var/www/html'
+      - './configs/nginx:/etc/nginx/conf.d'
+    networks:
+      - 'employees'
+    depends_on:
+      - php
+
+  mysql:
+    image: mysql:5.7
+    container_name: ${APP_NAME}-mysql
+    restart: 'on-failure'
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      SERVICE_TAGS: dev 
+      SERVICE_NAME: mysql
+    ports:
+      - '3307:3306'
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-uuser", "-ppassword"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    volumes:
+      - './db:/docker-entrypoint-initdb.d'
+      - './data:/var/lib/mysql'
+    networks:
+      - 'employees'
+
+volumes:
+  data:
+
+networks:
+  employees:
+    driver: bridge  
