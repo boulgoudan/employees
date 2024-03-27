@@ -1,4 +1,4 @@
-# 1. Create the PHP's container's image
+# 1. Create the PHP image
 
 ```shell
 $ docker build -t mboulgoudan/arm64v8-php8.3fpm .
@@ -22,7 +22,7 @@ mboulgoudan/arm64v8-php8.3fpm                   latest            6149e0114fc0  
 
 ```shell
 $ docker login
-docker login         git:(main|✚1…1 
+docker login 
 Log in with your Docker ID or email address to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com/ to create one.
 You can log in with your password or a Personal Access Token (PAT). Using a limited-scope PAT grants better security and is required for organizations using SSO. Learn more at https://docs.docker.com/go/access-tokens/
 
@@ -35,7 +35,6 @@ Login Succeeded
 
 ```shell
 $ docker image push mboulgoudan/arm64v8-php8.3fpm:8.3fpm
-         git:(main|✚1…1 
 The push refers to repository [docker.io/mboulgoudan/arm64v8-php8.3fpm]
 5f70bf18a086: Pushed 
 2d3d3115c0a4: Pushed 
