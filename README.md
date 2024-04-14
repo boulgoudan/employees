@@ -165,5 +165,6 @@ mysql> select * from departments;
 
 Go to the following URL in the browser
 ```shell
-http://localhost:81/index.php
+http://localhost:81/
 ```
+![Departments](screenshots/departments.png "Departments")
