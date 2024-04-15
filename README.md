@@ -1,6 +1,10 @@
 The purpose of this repository is to create a LEMP (Linux, Nginx, PHP, MySQL) stack inside Docker containers.
 
-Regarding the database, I am using _employees_ that is freely available on the MySQL website: https://dev.mysql.com/doc/employee/en/.
+Regarding the database, I am using _employees_ that is freely available on the MySQL website (https://dev.mysql.com/doc/employee/en/) and licenced under the Creative Commons Attribution-ShareAlike 3.0 Unported License (https://creativecommons.org/licenses/by-sa/3.0/).
+
+All other material in this repository is licenced under the Creative Commons Attribution-ShareAlike 4.0 International.
+
+![Licence](screenshots/cc-by-sa.png "Creative Commons Attribution-ShareAlike 4.0 International Licence")
 
 # Create the PHP-FPM image
 
