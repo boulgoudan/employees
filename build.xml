@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="employees" default="all" basedir="." description="The buildfile for Employees project">
+    <!-- ============================================ -->
+    <!-- Properties                                   -->
+    <!-- ============================================ -->
+    <property name="src" value="src/" />
+    <property name="tests" value="tests/" />
+
+    <!-- ============================================ -->
+    <!-- Target: all                                  -->
+    <!-- ============================================ -->
+    <echo msg="Assessing the QA of the project" />
+    
+    <target name="all" depends="phpcs,phpunit,pdepend,phpdox,phploc"></target>
+    <target name="all-ci" depends="prepare,phpcs-ci,phpunit-ci,pdepend-ci,phpdox-ci,phploc-ci"></target>
+    
+    <target name="prepare" depends="clean">
+        <echo msg="... Create the directories where to put the build artifacts" />
+        <exec command="mkdir build"/>
+        <exec command="mkdir build/logs"/>
+        <exec command="mkdir build/phpdox"/>
+        <exec command="mkdir build/pdepend"/>
+    </target>
+    
+    <target name="clean">
+        <echo msg="... Delete the build artifacts" />
+        <exec command="rm -rf build"/>
+    </target>
+    
+    <!-- ============================================  -->
+    <!-- CODING STANDARDS                              -->
+    <!-- ============================================  -->
+        
+    <!-- phpcs : DEV environment -->
+    <target name="phpcs">
+        <echo msg="... Checking Coding Standards" />
+        <exec command="phpcs --standard=PSR2 --warning-severity=0 --extensions=php ${src}" />
+    </target>
+    
+    <!-- phpcs : CI environment -->
+    <target name="phpcs-ci">
+        <echo msg="... Checking Coding Standards" />
+        <exec command="phpcs --standard=PSR2 --warning-severity=0 --extensions=php --report=checkstyle --report-file=build/logs/checkstyle.xml ${src}" />
+    </target>
+
+    <!-- ============================================ -->
+    <!-- UNIT TESTING                                 -->
+    <!-- ============================================ -->
+
+    <!-- phpunit : DEV environment -->
+    <target name="phpunit">
+        <echo msg="... Unit testing" />
+        <exec command="phpunit --bootstrap ${src}/autoload.php ${src}" />
+    </target>
+    
+    <!-- phpunit : CI environment -->
+    <target name="phpunit-ci">
+        <echo msg="... Unit testing" />
+        <exec command="phpunit --bootstrap ${src}/autoload.php --log-junit build/logs/phpunit.xml ${tests}" />
+    </target>
+    
+    <!-- ============================================ -->
+    <!-- DOCUMENTATION                                -->
+    <!-- ============================================ -->
+
+    <!-- phpdox : DEV environment -->
+    <target name="phpdox">
+        <echo msg="... Generating Project Documentation" />
+        <exec command="phpdox" />
+    </target>
+    
+    <!-- phpdox : CI environment -->
+    <target name="phpdox-ci" depends="phploc-ci">
+        <echo msg="... Generating Project Documentation" />
+        <exec command="phpdox" />
+    </target>
+    
+    <!-- ============================================ -->
+    <!-- PROJECT SIZE                                 -->
+    <!-- ============================================ -->
+
+    <!-- phploc : DEV environment -->
+    <target name="phploc">
+        <echo msg="... Measuring project size" />
+        <exec passthru="true" command="phploc ${src}" />
+    </target>
+    
+    <!-- phploc : CI environment -->
+    <target name="phploc-ci">
+        <echo msg="... Measuring project size" />
+        <exec passthru="true" command="phploc --log-csv=build/logs/phploc.csv --log-xml=build/logs/phploc.xml ${src}" />
+    </target>
+    
+    <!-- ============================================ -->
+    <!-- SOFTWARE METRICS                                 -->
+    <!-- ============================================ -->
+
+    <!-- pdepend : DEV environment -->
+    <target name="pdepend">
+        <echo msg="... Measuring project software metrics" />
+        <exec command="pdepend --summary-xml=build/logs/pdepend.xml ${src}" />
+    </target>
+    
+    <!-- pdepend : CI environment -->
+    <target name="pdepend-ci">
+        <echo msg="... Measuring project software metrics" />
+        <exec command="pdepend --summary-xml=build/logs/pdepend.xml --jdepend-chart=build/pdepend/jdepend.svg --overview-pyramid=build/pdepend/pyramid.svg ${src}" />
+    </target>
+</project>
